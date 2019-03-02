@@ -27,10 +27,11 @@ class Game {
     m_hNumGuessesRem;
     m_hLetAlrdyGuessed;
     m_hWordToGuess;
+    m_hGameHint;
 
     // constructors
     constructor() {
-       
+
     }
 
     // methods
@@ -38,7 +39,7 @@ class Game {
     // intialize the game
     InitGame() {
 
-       
+
         this.m_nNumWins = 0;
 
         //variable used as an index for loops
@@ -47,24 +48,19 @@ class Game {
         // populate the word list
         this.populateWordList();
 
-      
-
         // get references to draw to
         this.m_hNumWins = document.getElementById("numWins");
         this.m_hNumGuessesRem = document.getElementById("numGuessesRem");
-        this.m_hLetAlrdyGuessed = document.getElementById("numWinletAlrdyG");
+        this.m_hLetAlrdyGuessed = document.getElementById("letAlrdyG");
         this.m_hWordToGuess = document.getElementById("wordToGuess");
+        this.m_hGameHint = document.getElementById("gameHint");
 
         this.reset();
 
-       
-        // debug
-        // this.m_szlettersAlrdyGuessed.push("f");
-  
     }
 
-  
-     userInput() {
+
+    userInput() {
 
         // variable used to index 
         var i = 0;
@@ -76,7 +72,14 @@ class Game {
         // listen for user input
         document.onkeyup = function (event) {
 
-             //  check if user has already guessed the letter
+            // check to make sure its a letter
+            console.log(event.key.charCodeAt(0));
+            if (event.key.charCodeAt(0) < 97 || event.key.charCodeAt(0) > 122) {
+                alert("that is not a character");
+                return;
+            }
+
+            //  check if user has already guessed the letter
             for (i = 0; i < hGame.m_szlettersAlrdyGuessed.length; ++i) {
 
                 if (event.key === hGame.m_szlettersAlrdyGuessed[i]) {
@@ -86,40 +89,53 @@ class Game {
 
             }
 
+            
+
             // set the letter guessed 
             var szUserLetGuess = event.key;
 
-            // store the new letter in the list of letters guessed
-            hGame.m_szlettersAlrdyGuessed.push(szUserLetGuess);
+             // store the new letter in the list of letters guessed
+             hGame.m_szlettersAlrdyGuessed.push(szUserLetGuess);
 
+            var str1 = "";
+            // display the letters that have been guessed
+            for (i = 0; i < hGame.m_szlettersAlrdyGuessed.length; ++i) {
+
+                str1 += hGame.m_szlettersAlrdyGuessed[i] + ', ';
+            }
+            hGame.m_hLetAlrdyGuessed.textContent = str1;
+
+           
             // decrease the number of guesses
             --hGame.m_nNumOfGuessesRem;
+            hGame.m_hNumGuessesRem.textContent = hGame.m_nNumOfGuessesRem.toString();
 
             // if the number of guesses remaining is equal to zero than the player has lost
             if (hGame.m_nNumOfGuessesRem === 0) {
 
                 // display to the user that they have lost
-                alert("The user has lost");
+                hGame.userLose();
+
                 // reset the game
-                reset();
+                hGame.reset();
             }
 
 
             // check if input matches a letter from the randomly selected word
             for (i = 0; i < hGame.m_szUserWordAttempt.length; ++i) {
-                
-              
+
+
                 // store the new found letter in the already guessed string
                 if (szUserLetGuess === hGame.m_WordsToGuess[hGame.m_nIndexWordToGuess].m_szWord[i]) {
 
                     var str1 = "";
-                 
-                    for (var x = 0; x < i; ++x){
+
+                    for (var x = 0; x < i; ++x) {
                         str1 += hGame.m_szUserWordAttempt[x];
                     }
                     str1 += szUserLetGuess;
 
-                    for (var x = i + 1; x < hGame.m_szUserWordAttempt.length; ++x){
+                    for (var x = i + 1; x < hGame.m_szUserWordAttempt.length; ++x) {
                         str1 += hGame.m_szUserWordAttempt[x];
                     }
                     hGame.m_szUserWordAttempt = str1;
@@ -133,7 +149,7 @@ class Game {
 
                 if (hGame.m_szUserWordAttempt[i] !== hGame.m_WordsToGuess[hGame.m_nIndexWordToGuess].m_szWord[i]) {
                     // if the letter doesnt match then leave the function
-                    
+
                     return;
 
                 }
@@ -147,9 +163,13 @@ class Game {
     }
     // display to the screen that the user has won
     userWin() {
-        alert("You have won!");
-        this.reset();
-    }
+        this.m_nNumWins++;
+        this.m_hNumWins.textContent = this.m_nNumWins;
+         alert("Congratz you won!!!\n The word was: " + this.m_szUserWordAttempt);
+         this.reset();
+        }
+
+   
 
     // display to the user that they have lost
     userLose() {
@@ -170,29 +190,30 @@ class Game {
             hGame.m_szlettersAlrdyGuessed.pop();
         }
 
+        hGame.m_hLetAlrdyGuessed.textContent = "";
         hGame.m_szUserWordAttempt = "";
 
-        
-       
-        hGame.numOfGuessesRem = 10;
+        hGame.m_nNumOfGuessesRem = 10;
+        hGame.m_hNumGuessesRem.textContent = hGame.m_nNumOfGuessesRem.toString();
 
-         // pick word for computer to guess
-        hGame.m_nIndexWordToGuess = 0;
-            // Math.floor(Math.random() * 9);
+        // pick word for computer to guess
+        hGame.m_nIndexWordToGuess = Math.floor(Math.random() * 9);
 
-           // temp: this can be done better
+        // temp: this can be done better
         var temp = hGame.m_WordsToGuess[hGame.m_nIndexWordToGuess];
         var WordLength = temp.m_szWord.length;
 
-           for (i = 0; i < WordLength; ++i) {
-            hGame.m_szUserWordAttempt += i.toString();
-   
-           }
-        
-            // display to the page the
-            hGame.m_hWordToGuess.textContent = hGame.m_szUserWordAttempt;
+        for (i = 0; i < WordLength; ++i) {
+            hGame.m_szUserWordAttempt += '_';
 
-        
+        }
+
+        // display to the page the
+        hGame.m_hWordToGuess.textContent = hGame.m_szUserWordAttempt;
+        hGame.m_hGameHint.textContent = hGame.m_WordsToGuess[hGame.m_nIndexWordToGuess].m_szHint;
+
+
+
     }
 
     // add words to list
@@ -201,13 +222,13 @@ class Game {
         this.m_WordsToGuess.push(new WordToGuess("pizza", "Hint: The ninja turtles liked to eat it"));
         this.m_WordsToGuess.push(new WordToGuess("space", "Hint: The final frontier"));
         this.m_WordsToGuess.push(new WordToGuess("code", "Hint: What we are learning to do"));
-        this.m_WordsToGuess.push(new WordToGuess("javascript", "Hint: what powers this game"));
-        this.m_WordsToGuess.push(new WordToGuess("house", "Hint: You live in a ..."));
-        this.m_WordsToGuess.push(new WordToGuess("frog", "Hint: Small ambiphibous creature"));
-        this.m_WordsToGuess.push(new WordToGuess("dinosaurs", "Hint: went extinct 65 million years ago"));
+        this.m_WordsToGuess.push(new WordToGuess("javascript", "Hint: What powers this game"));
+        this.m_WordsToGuess.push(new WordToGuess("house", "Hint: People live in a ..."));
+        this.m_WordsToGuess.push(new WordToGuess("frog", "Hint: Small amphibious creature"));
+        this.m_WordsToGuess.push(new WordToGuess("dinosaurs", "Hint: Went extinct 65 million years ago"));
         this.m_WordsToGuess.push(new WordToGuess("game", "Hint: What are you playing?"));
         this.m_WordsToGuess.push(new WordToGuess("snow", "Hint: When rain freezes it becomes"));
-        this.m_WordsToGuess.push(new WordToGuess("rocket", "Hint: Moves very fast"));
+        this.m_WordsToGuess.push(new WordToGuess("rocket", "Hint: It moves very fast"));
     }
 
     // write out to the dubugger
