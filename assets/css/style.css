@@ -49,4 +49,15 @@ h1, h2, #theWord, #txtALiCenter {
     background-color:yellow;
 }
 
+/*
+    media queries
+
+*/
+ @media screen and (max-width: 768px) {
+    #wordToGuess {
+        font-size: 50px;
+        letter-spacing: 10px;
+        color: green;
+    }
+ }
  
