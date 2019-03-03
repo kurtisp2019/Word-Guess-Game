@@ -95,10 +95,13 @@ class Game {
         // create a handle to the game
         var hGame = this;
 
+        
 
         // listen for user input
         document.onkeyup = function (event) {
 
+           Game.document.getElementById("#wordToGuess").focus();
+            
             if (event.key.charCodeAt(0) === 67)
                 return;
             // check to make sure its a letter
@@ -189,6 +192,7 @@ class Game {
         this.reset();
     }
 
+   
 
 
     // display to the user that they have lost
@@ -259,12 +263,11 @@ class Game {
 
 }
 
-
-
 /************************************************************************************
  *      This is main logic of the game
  * 
  ************************************************************************************/
+
 
 var game = new Game();
 // game.populateWordList();
