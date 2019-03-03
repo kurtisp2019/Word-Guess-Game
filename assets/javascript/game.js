@@ -266,8 +266,6 @@ class Game {
  * 
  ************************************************************************************/
 
-prompt();
-
 var game = new Game();
 // game.populateWordList();
 game.InitGame();
