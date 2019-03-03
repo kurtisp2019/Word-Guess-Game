@@ -257,10 +257,6 @@ class Game {
       
     }
 
-    // write out to the dubugger
-    debugLogger(str) {
-        console.log(str);
-    }
 }
 
 
@@ -269,9 +265,10 @@ class Game {
  *      This is main logic of the game
  * 
  ************************************************************************************/
+
+prompt();
 var game = new Game();
 // game.populateWordList();
 game.InitGame();
 game.userInput();
-game.debugLogger("test");
 

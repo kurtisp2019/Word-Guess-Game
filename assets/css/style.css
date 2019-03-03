@@ -54,10 +54,28 @@ h1, h2, #theWord, #txtALiCenter {
 
 */
  @media screen and (max-width: 768px) {
+   
+    h1 {
+        font-size: 35px;
+     }
+    
+    h2 {
+        font-size: 20px;
+     }
+
     #wordToGuess {
         font-size: 50px;
         letter-spacing: 10px;
-        color: green;
+   }
+
+    #gameHint {
+        font-size: 25px;
+     }
+
+    #letAlrdyG {
+        font-size: 25px;
     }
+    
+  
  }
  
