@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,28 +8,34 @@
     <title>Document</title>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    
+    <link rel="stylesheet" href="assets/css/style.css">
+
 </head>
+
 <body>
-    
+
     <!-- Introduction! -->
-   <p>Pick a letter!</p>
-   
-   <p><label id ="wordToGuess">blank</label></p>
-   <p><label id="gameHint">blank.</label></p>
-    <p>Number of Wins: <label id="numWins">0</label></p>
-    <p>Number of Guesses remaining: <label id="numGuessesRem">0</label></p>
-    <p>Letters that have been guessed: <label id="letAlrdyG">0</label></p>
-    <p><label id="playerHints"></label></p>
+    <h1>Welcome to the Word Guess Game!</h1>
+    <h2>Please pick a letter!</h1>
+
+        <div id="txtALiCenter">
+            <p><label id="wordToGuess">blank</label></p>
+            <p><label id="gameHint">blank.</label></p>
+            <p>Number of Wins: <label id="numWins">0</label></p>
+            <p>Number of Guesses remaining: <label id="numGuessesRem">0</label></p>
+            <p>Letters that have been guessed: </p>
+            <label id="letAlrdyG">none</label>
+            <p><label id="playerHints"></label></p>
+        </div>
+
+        <!--Display the emtpy spaces and guessed letters-->
+        <p><label id="dispWord"></label></p>
 
 
-    <!--Display the emtpy spaces and guessed letters-->
-    <p><label id="dispWord"></label></p>
 
+        <!-- Include Script Files -->
+        <script type="text/javascript" src="assets/javascript/game.js"></script>
 
-
- <!-- Include Script Files -->
- <script type="text/javascript" src="assets/javascript/game.js"></script>
-      
 </body>
+
 </html>

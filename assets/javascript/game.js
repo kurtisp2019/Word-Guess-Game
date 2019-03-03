@@ -19,8 +19,13 @@ class Game {
     m_nNumWins = 0;
     m_szlettersAlrdyGuessed = [];
     m_nIndexWordToGuess = 0;
-    m_nNumOfGuessesRem = 10;
+    m_nNumOfGuessesRem = 0;
     m_szUserWordAttempt = new String("");
+    m_sfxPositive = new Audio("assets/audio/positive.mp3");
+    m_sfxNegative = new Audio("assets/audio/negative.mp3");
+    m_sfxLose = new Audio("assets/audio/lost.mp3");
+    m_sfxWin = new Audio("assets/audio/win.mp3");
+    
 
     // handles to the web page
     m_hNumWins;
@@ -38,7 +43,6 @@ class Game {
 
     // intialize the game
     InitGame() {
-
 
         this.m_nNumWins = 0;
 
@@ -60,6 +64,29 @@ class Game {
     }
 
 
+    userMissedLet() {
+
+        // create a handle to the game
+        var hGame = this;
+
+         // decrease the number of guesses
+         --hGame.m_nNumOfGuessesRem;
+         hGame.m_hNumGuessesRem.textContent = hGame.m_nNumOfGuessesRem.toString();
+
+         // if the number of guesses remaining is equal to zero than the player has lost
+         if (hGame.m_nNumOfGuessesRem === 0) {
+
+             // display to the user that they have lost
+             this.m_sfxLose.play();
+             hGame.userLose();
+
+             // reset the game
+             hGame.reset();
+         }
+        
+        hGame.m_sfxNegative.play();
+
+    }
     userInput() {
 
         // variable used to index 
@@ -72,30 +99,33 @@ class Game {
         // listen for user input
         document.onkeyup = function (event) {
 
+            if (event.key.charCodeAt(0) === 67)
+                return;
             // check to make sure its a letter
-            console.log(event.key.charCodeAt(0));
-            if (event.key.charCodeAt(0) < 97 || event.key.charCodeAt(0) > 122) {
-                alert("that is not a character");
+            var asciiV = event.key.charCodeAt(0);
+            if (asciiV < 97 || asciiV > 122) {
+                alert("\"" + event.key + "\" is not a character");
                 return;
             }
 
-            //  check if user has already guessed the letter
+             //  check if user has already guessed the letter
             for (i = 0; i < hGame.m_szlettersAlrdyGuessed.length; ++i) {
 
                 if (event.key === hGame.m_szlettersAlrdyGuessed[i]) {
                     alert("You have already guessed: \'" + event.key + '\'')
+                    hGame.m_sfxNegative.play();
                     return;
                 }
 
             }
 
-            
+
 
             // set the letter guessed 
             var szUserLetGuess = event.key;
 
-             // store the new letter in the list of letters guessed
-             hGame.m_szlettersAlrdyGuessed.push(szUserLetGuess);
+            // store the new letter in the list of letters guessed
+            hGame.m_szlettersAlrdyGuessed.push(szUserLetGuess);
 
             var str1 = "";
             // display the letters that have been guessed
@@ -105,22 +135,8 @@ class Game {
             }
             hGame.m_hLetAlrdyGuessed.textContent = str1;
 
-           
-            // decrease the number of guesses
-            --hGame.m_nNumOfGuessesRem;
-            hGame.m_hNumGuessesRem.textContent = hGame.m_nNumOfGuessesRem.toString();
 
-            // if the number of guesses remaining is equal to zero than the player has lost
-            if (hGame.m_nNumOfGuessesRem === 0) {
-
-                // display to the user that they have lost
-                hGame.userLose();
-
-                // reset the game
-                hGame.reset();
-            }
-
-
+            var bFoundLet = false;
             // check if input matches a letter from the randomly selected word
             for (i = 0; i < hGame.m_szUserWordAttempt.length; ++i) {
 
@@ -140,9 +156,12 @@ class Game {
                     }
                     hGame.m_szUserWordAttempt = str1;
                     hGame.m_hWordToGuess.textContent = hGame.m_szUserWordAttempt;
-
-
+                    bFoundLet = true;
+                    hGame.m_sfxPositive.play();
                 }
+            }
+            if (bFoundLet === false) {
+                hGame.userMissedLet();
             }
 
             for (i = 0; i < hGame.m_WordsToGuess[hGame.m_nIndexWordToGuess].m_szWord.length; ++i) {
@@ -156,6 +175,7 @@ class Game {
             }
 
             // if the word is complete display to the user that they have won the game
+            hGame.m_sfxWin.play();
             hGame.userWin();
 
 
@@ -165,14 +185,15 @@ class Game {
     userWin() {
         this.m_nNumWins++;
         this.m_hNumWins.textContent = this.m_nNumWins;
-         alert("Congratz you won!!!\n The word was: " + this.m_szUserWordAttempt);
-         this.reset();
-        }
+        alert("Congratz you won!!!\n The word was: " + this.m_szUserWordAttempt);
+        this.reset();
+    }
 
-   
+
 
     // display to the user that they have lost
     userLose() {
+        
         alert("You have lost!");
         this.reset();
     }
@@ -197,7 +218,7 @@ class Game {
         hGame.m_hNumGuessesRem.textContent = hGame.m_nNumOfGuessesRem.toString();
 
         // pick word for computer to guess
-        hGame.m_nIndexWordToGuess = Math.floor(Math.random() * 9);
+        hGame.m_nIndexWordToGuess = Math.floor(Math.random() * 12);
 
         // temp: this can be done better
         var temp = hGame.m_WordsToGuess[hGame.m_nIndexWordToGuess];
@@ -219,16 +240,21 @@ class Game {
     // add words to list
     populateWordList() {
 
-        this.m_WordsToGuess.push(new WordToGuess("pizza", "Hint: The ninja turtles liked to eat it"));
+        //
+        this.m_WordsToGuess.push(new WordToGuess("pizza", "Hint: The ninja turtles like to eat it"));
         this.m_WordsToGuess.push(new WordToGuess("space", "Hint: The final frontier"));
         this.m_WordsToGuess.push(new WordToGuess("code", "Hint: What we are learning to do"));
         this.m_WordsToGuess.push(new WordToGuess("javascript", "Hint: What powers this game"));
         this.m_WordsToGuess.push(new WordToGuess("house", "Hint: People live in a ..."));
+        this.m_WordsToGuess.push(new WordToGuess("florida", "Hint: It's a state not a city"));
+        this.m_WordsToGuess.push(new WordToGuess("colorado", "Hint: Currently living"));
+        this.m_WordsToGuess.push(new WordToGuess("avengers", "Hint: Marvel movie being released this April"));
         this.m_WordsToGuess.push(new WordToGuess("frog", "Hint: Small amphibious creature"));
         this.m_WordsToGuess.push(new WordToGuess("dinosaurs", "Hint: Went extinct 65 million years ago"));
         this.m_WordsToGuess.push(new WordToGuess("game", "Hint: What are you playing?"));
         this.m_WordsToGuess.push(new WordToGuess("snow", "Hint: When rain freezes it becomes"));
         this.m_WordsToGuess.push(new WordToGuess("rocket", "Hint: It moves very fast"));
+      
     }
 
     // write out to the dubugger

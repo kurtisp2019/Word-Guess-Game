@@ -1,0 +1,52 @@
+/*
+*
+*           Style.css
+*
+*
+*/
+
+* {
+    font-size: 20px;
+   
+}
+h1 {
+    color: blue;
+    font-size: 50px;
+ }
+
+h2 {
+    font-size: 30px;
+    color: darkcyan;
+}
+
+h1, h2, #theWord, #txtALiCenter {
+    text-align: center;
+}
+
+#wordToGuess {
+    font-size: 100px;
+    letter-spacing: 20px;
+    color: green;
+}
+
+#gameHint {
+    font-size:50px;
+    color: green;
+    background-color: yellow;
+}
+#letAlrdyG {
+    font-size: 50px;
+    color: red;
+}
+
+#numGuessesRem {
+    color: orangered;
+    background-color: yellow;
+}
+
+#numWins {
+    color: darkgreen;
+    background-color:yellow;
+}
+
+ 
