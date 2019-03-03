@@ -100,7 +100,8 @@ class Game {
         // listen for user input
         document.onkeyup = function (event) {
 
-           Game.document.getElementById("#wordToGuess").focus();
+            // trying to get keyboard to display on mobile
+           //Game.document.getElementById("#wordToGuess").focus();
             
             if (event.key.charCodeAt(0) === 67)
                 return;
